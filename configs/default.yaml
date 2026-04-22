@@ -1,0 +1,44 @@
+# Default training hyperparameters for SCDMN-comma2k19.
+# Tuned for a single T4 / L4 Colab GPU (~12-16 GB VRAM).
+
+seed: 42
+
+data:
+  data_root: ./data_cache
+  csv_path: ./data_cache/frames.csv
+  image_size: 224
+  fps: 10
+  # Normalize steering by this (rad). comma2k19 steering_angle is in radians;
+  # |angle| > steering_clip is clipped and then divided by steering_clip
+  # to land the tanh target in [-1, 1].
+  steering_clip: 1.0     # ~57 deg; >99.5% of highway samples fall inside
+  val_fraction: 0.1      # by segment_id, not by frame
+
+train:
+  epochs: 30
+  batch_size: 64
+  lr: 0.05
+  momentum: 0.9
+  weight_decay: 5e-4
+  smooth_l1_beta: 0.1
+  num_workers: 4
+  balanced_sampling: true
+
+model:
+  sparsity: 0.5
+  freeze_epoch: 5
+  num_contexts: 3        # day_clear / day_overcast / night
+
+context:
+  names: [day_clear, day_overcast, night]
+  brightness_thresholds:
+    day_clear: 140       # mean > 140
+    day_overcast: 80     # 80 < mean <= 140
+    # night: mean <= 80
+
+log:
+  save_dir: ./experiments/runs
+  log_every: 50
+  # Optional secondary ckpt dir (e.g. /content/drive/MyDrive/scdmn_comma2k19)
+  # Leave empty to disable.
+  drive_save_dir: ""

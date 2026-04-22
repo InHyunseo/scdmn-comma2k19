@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+.venv/
+.env
+
+# data & checkpoints
+data_cache/
+data_cache/**
+frames/
+frames/**
+*.hevc
+*.mp4
+*.npy
+*.pt
+*.pth
+*.ckpt
+*.tar.gz
+*.zip
+
+# experiment outputs
+experiments/runs/
+!experiments/runs/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
